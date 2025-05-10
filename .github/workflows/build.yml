@@ -22,6 +22,10 @@ jobs:
           - { target: osx-arm64, os: macos-14 }
       fail-fast: false
 
+    permissions:
+      id-token: write
+      contents: read
+
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -41,20 +45,20 @@ jobs:
       shell: bash
       env:
         TARGET_PLATFORM: ${{ matrix.target }}
-
       run: |
         pixi run rattler-build build --recipe-dir . \
           --skip-existing=all --target-platform=$TARGET_PLATFORM \
-          -c conda-forge -c https://prefix.dev/mts-forge
+          -c https://prefix.dev/mts-forge -c conda-forge
 
     - name: Upload all packages
       shell: bash
-      # do not upload on PR
       if: github.event_name == 'push'
-      env:
-        PREFIX_API_KEY: ${{ secrets.PREFIX_API_KEY }}
       run: |
-        # ignore errors because we want to ignore duplicate packages
-        for file in output/**/*.conda; do
-          pixi run rattler-build upload prefix -c r-forge "$file" || true
+        shopt -s nullglob
+        EXIT_CODE=0
+        for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
+          if ! rattler-build upload prefix -c mts-forge "${pkg}"; then
+            EXIT_CODE=1
+          fi
         done
+        exit $EXIT_CODE
