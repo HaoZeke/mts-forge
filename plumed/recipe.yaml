@@ -11,8 +11,8 @@ source:
   rev: ${{ git_rev }}
 
 build:
+  number: 0
   skip:
-    - macos
     - win
   script: build.sh
 
@@ -60,6 +60,9 @@ tests:
     - if: osx
       then:
         - conda inspect objects -p $PREFIX $PKG_NAME
+    requirements:
+      run:
+        - conda-build
 
 about:
   homepage: http://www.plumed.org/
