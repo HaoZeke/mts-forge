@@ -14,4 +14,4 @@ bcc = "_CCACHE=1 rattler-build build --no-build-id --recipe "
 
 [dependencies]
 rattler-build = ">=0.40.0,<0.42"
-sccache = ">=0.10.0,<0.11"
+conda-index = ">=0.6.0,<0.7"
