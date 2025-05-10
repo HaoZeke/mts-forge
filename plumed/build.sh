@@ -26,11 +26,18 @@ export CPPFLAGS="-I$PREFIX/include/torch/csrc/api/include $CPPFLAGS"
 # enable MPI
 export CXX=mpic++
 
+# Setup sccache
+# Remember to build with rattler-build build --no-build-id --recipe ..
+if [[ $_CCACHE ]]; then
+export C="sccache $C"
+export CXX="sccache $CXX"
+fi
+
 # python is disabled since it should be provided as a separate package
 # --disable-libsearch forces to link only explicitely requested libraries
 # --disable-static-patch avoid tests that are only required for static patches
 # --disable-static-archive makes package smaller
-./configure --prefix=$PREFIX \
+./configure --prefix="$PREFIX" \
             --disable-python \
             --disable-libsearch \
             --disable-static-patch \
@@ -40,5 +47,5 @@ export CXX=mpic++
             --enable-metatensor \
             --enable-libtorch
 
-make -j3
+make "-j${CPU_COUNT}" "${VERBOSE_AT}"
 make install

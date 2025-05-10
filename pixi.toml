@@ -7,6 +7,10 @@ version = "0.1.0"
 description = "Forge for metatensor enabled software and tooling"
 
 [tasks]
+build = "rattler-build build --recipe "
+# Cached build
+# https://rattler.build/latest/tips_and_tricks/#using-sccache-or-ccache-with-rattler-build
+bcc = "_CCACHE=1 rattler-build build --no-build-id --recipe "
 
 [dependencies]
 rattler-build = ">=0.40.0,<0.42"
