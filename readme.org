@@ -1,6 +1,13 @@
 * mts-forge
 This is a forge for metatensor compatible software stacks.
 ** Usage
-Each package is built with ~rattler-build~.
+Each package is built with ~rattler-build~. For convinience, these can be handled via ~pixi~ tasks.
+
+#+begin_src bash
+# Classic build
+pixi run build $RECIPE
+# Builds a build cache variant with sccache
+pixi run bcc $RECIPE
+#+end_src
 * License
 MIT.
