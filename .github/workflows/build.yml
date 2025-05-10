@@ -41,6 +41,27 @@ jobs:
       run: |
         echo "$(pwd)/.pixi/envs/default/bin" >> $GITHUB_PATH
 
+    - name: Cache rattler-build source cache
+      uses: actions/cache@v4
+      with:
+        # Path to rattler-build's source cache
+        path: ${{ github.workspace }}/output/src_cache
+        # Cache key
+        key: ${{ runner.os }}-rattler-src-cache-${{ hashFiles('**/recipe.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-rattler-src-cache-
+
+    - name: Cache rattler-build built packages for ${{ matrix.target }}
+      uses: actions/cache@v4
+      with:
+        # Path to platform-specific built packages
+        path: ${{ github.workspace }}/output/${{ matrix.target }}
+        key: ${{ runner.os }}-${{ matrix.target }}-rattler-pkgs-${{ github.ref }}-${{ hashFiles('**/recipe.yaml') }}
+        # Fallback to main branch cache if on a PR
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.target }}-rattler-pkgs-${{ github.ref }}-
+          ${{ runner.os }}-${{ matrix.target }}-rattler-pkgs-refs/heads/main-
+
     - name: Run code in changed subdirectories
       shell: bash
       env:
