@@ -1,0 +1,6 @@
+* mts-forge
+This is a forge for metatensor compatible software stacks.
+** Usage
+Each package is built with ~rattler-build~.
+* License
+MIT.
