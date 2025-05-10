@@ -22,7 +22,6 @@ requirements:
     - ${{ compiler('cxx') }}
     - make
     - sccache
-    - conda-build
     - if: osx
       then:
         - llvm-openmp
