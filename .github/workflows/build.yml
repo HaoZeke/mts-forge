@@ -47,9 +47,9 @@ jobs:
         # Path to rattler-build's source cache
         path: ${{ github.workspace }}/output/src_cache
         # Cache key
-        key: ${{ runner.os }}-rattler-src-cache-${{ hashFiles('**/recipe.yaml') }}
+        key: rattler-src-cache-${{ hashFiles('**/recipe.yaml') }}
         restore-keys: |
-          ${{ runner.os }}-rattler-src-cache-
+          rattler-src-cache-
 
     - name: Cache rattler-build built packages for ${{ matrix.target }}
       uses: actions/cache@v4
