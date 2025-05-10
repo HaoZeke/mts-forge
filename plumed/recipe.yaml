@@ -40,7 +40,6 @@ requirements:
   run:
     - boost-cpp
     - openmpi
-    - gawk
     - libtorch
     - libmetatensor-torch >=0.5.0,<0.6.0
     - if: osx
