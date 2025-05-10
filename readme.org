@@ -9,5 +9,6 @@ pixi run build $RECIPE
 # Builds a build cache variant with sccache
 pixi run bcc $RECIPE
 #+end_src
+** TODO Setup ~conda_index~
 * License
 MIT.
