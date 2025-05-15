@@ -1,6 +1,6 @@
 context:
-  version: "2.10.dev1"
-  git_rev: "d12388b23ee71cd4c61d845db22697f95b9489c9"
+  version: "2.10.dev2"
+  git_rev: "1b9bb35e84685e4d782eb805a0bf721d05a107b9"
 
 package:
   name: plumed
@@ -11,7 +11,7 @@ source:
   rev: ${{ git_rev }}
 
 build:
-  number: 0
+  number: 1
   skip:
     - win
   script: build.sh
