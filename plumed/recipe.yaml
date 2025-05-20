@@ -1,6 +1,16 @@
 context:
-  version: "2.10.dev2"
-  git_rev: "1b9bb35e84685e4d782eb805a0bf721d05a107b9"
+  version: 2.10.dev2
+  build_pre: 2
+  build_num: >
+    ${{ (build_pre | int + 2000) if mpi == "openmpi"
+    else ((build_pre | int + 1000) if mpi == "mpich"
+    else ((build_pre | int) if mpi == "nompi"
+    else 0)) }}
+  git_rev: 1b9bb35e84685e4d782eb805a0bf721d05a107b9
+  mpi_prefix:
+    - if: mpi == nompi
+      then: nompi
+      else: mpi_${{mpi}}
 
 package:
   name: plumed
@@ -11,7 +21,13 @@ source:
   rev: ${{ git_rev }}
 
 build:
-  number: 1
+  # add build string so packages can depend on
+  # mpi or nompi variants
+  # dependencies:
+  # `pkg * mpi_mpich_*` for mpich
+  # `pkg * mpi_*` for any mpi
+  number: ${{ build_num }}
+  string: ${{ mpi_prefix[0] }}_h${{ hash }}_${{ build_num }}
   skip:
     - win
   script: build.sh
@@ -22,12 +38,17 @@ requirements:
     - ${{ compiler('cxx') }}
     - make
     - sccache
+    - if: (build_platform != target_platform) and (mpi == openmpi)
+      then:
+        - ${{ mpi }}
     - if: osx
       then:
         - llvm-openmp
   host:
+    - if: mpi != nompi
+      then:
+        - ${{ mpi }}
     - boost-cpp
-    - openmpi
     - fftw
     - gsl
     - openblas
@@ -38,8 +59,10 @@ requirements:
       then:
         - llvm-openmp
   run:
+    - if: mpi != nompi
+      then:
+        - ${{ mpi }}
     - boost-cpp
-    - openmpi
     - libtorch
     - libmetatensor-torch >=0.5.0,<0.6.0
     - if: osx
@@ -71,10 +94,10 @@ about:
   license_file: COPYING.LESSER
   summary: 'Free energy calculations in molecular systems'
   description: |
-    PLUMED is an open source library for free energy calculations in
-    molecular systems which works together with some of the most
-    popular molecular dynamics engines.
-  documentation: https://www.plumed.org/doc
+    PLUMED is an open source library for free energy calculations in molecular
+    systems which works together with some of the most popular molecular
+    dynamics engines. This version is instrumented for working with Metatensor.
+  documentation: https://docs.metatensor.org/latest/atomistic/engines/plumed.html
   repository: https://github.com/plumed/plumed2
 
 extra:
