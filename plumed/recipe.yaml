@@ -71,18 +71,18 @@ requirements:
 
 tests:
   - script:
-    - plumed info --root
-    - plumed info --long-version
-    - plumed-patch -h
-    - plumed config has external_blas external_lapack fftw gsl zlib
-    - $PREFIX/lib/plumed/plumed-runtime -h
-    - test -f $PREFIX/lib/libplumed$SHLIB_EXT
-    - test -f $PREFIX/lib/libplumedWrapper.a
-    - test -f $PREFIX/lib/libplumedKernel$SHLIB_EXT
-    - conda inspect linkages -p $PREFIX $PKG_NAME
-    - if: osx
-      then:
-        - conda inspect objects -p $PREFIX $PKG_NAME
+      - plumed info --root
+      - plumed info --long-version
+      - plumed-patch -h
+      - plumed config has external_blas external_lapack fftw gsl zlib
+      - $PREFIX/lib/plumed/plumed-runtime -h
+      - test -f $PREFIX/lib/libplumed$SHLIB_EXT
+      - test -f $PREFIX/lib/libplumedWrapper.a
+      - test -f $PREFIX/lib/libplumedKernel$SHLIB_EXT
+      - conda inspect linkages -p $PREFIX $PKG_NAME
+      - if: osx
+        then:
+          - conda inspect objects -p $PREFIX $PKG_NAME
     requirements:
       run:
         - conda-build
@@ -92,7 +92,7 @@ about:
   license: LGPL-3.0
   license_family: GPL
   license_file: COPYING.LESSER
-  summary: 'Free energy calculations in molecular systems'
+  summary: "Free energy calculations in molecular systems"
   description: |
     PLUMED is an open source library for free energy calculations in molecular
     systems which works together with some of the most popular molecular
