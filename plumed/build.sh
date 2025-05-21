@@ -24,7 +24,9 @@ export LIBS="-lmetatensor_torch -lmetatensor -ltorch -lc10 -ltorch_cpu $LIBS"
 export CPPFLAGS="-I$PREFIX/include/torch/csrc/api/include $CPPFLAGS"
 
 # enable MPI
+if [[ $USE_MPI ]]; then
 export CXX=mpic++
+fi
 
 # Setup sccache
 # Remember to build with rattler-build build --no-build-id --recipe ..

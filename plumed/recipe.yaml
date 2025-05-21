@@ -27,7 +27,10 @@ build:
   string: ${{ mpi_prefix }}_h${{ hash }}_${{ build_num }}
   skip:
     - win
-  script: build.sh
+  script:
+    file: build.sh
+    env:
+     USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
 
 requirements:
   build:
@@ -44,6 +47,7 @@ requirements:
     - if: osx and x86_64
       then:
         - ${{ stdlib("c") }}
+
   host:
     - if: mpi != "nompi"
       then:
