@@ -1,5 +1,5 @@
 context:
-  version: 2.10.dev2
+  version: "2.10.dev2"
   build_pre: 2
   build_num: >
     ${{ (build_pre | int + 2000) if mpi == "openmpi"
@@ -7,10 +7,7 @@ context:
     else ((build_pre | int) if mpi == "nompi"
     else 0)) }}
   git_rev: 1b9bb35e84685e4d782eb805a0bf721d05a107b9
-  mpi_prefix:
-    - if: mpi == "nompi"
-      then: "nompi"
-      else: mpi_${{mpi}}
+  mpi_prefix: "${{ 'nompi' if mpi == 'nompi' else 'mpi_' + mpi }}"
 
 package:
   name: plumed
@@ -27,7 +24,7 @@ build:
   # `pkg * mpi_mpich_*` for mpich
   # `pkg * mpi_*` for any mpi
   number: ${{ build_num }}
-  string: ${{ mpi_prefix[0] }}_h${{ hash }}_${{ build_num }}
+  string: ${{ mpi_prefix }}_h${{ hash }}_${{ build_num }}
   skip:
     - win
   script: build.sh
