@@ -31,6 +31,7 @@ build:
     file: build.sh
     env:
      USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
+     _CCACHE: ${{ env.get("_CCACHE", default=0) }}
 
 requirements:
   build:
