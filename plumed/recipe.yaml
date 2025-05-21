@@ -1,6 +1,6 @@
 context:
   version: "2.10.dev2"
-  build_pre: 2
+  build_pre: 3
   build_num: >
     ${{ (build_pre | int + 2000) if mpi == "openmpi"
     else ((build_pre | int + 1000) if mpi == "mpich"
@@ -46,7 +46,6 @@ requirements:
     - if: osx
       then:
         - llvm-openmp
-
   host:
     - if: mpi != "nompi"
       then:
