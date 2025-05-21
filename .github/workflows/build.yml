@@ -67,7 +67,7 @@ jobs:
       env:
         TARGET_PLATFORM: ${{ matrix.target }}
       run: |
-        pixi run rattler-build build --recipe-dir . \
+        MACOSX_DEPLOYMENT_TARGET="11.0" pixi run rattler-build build --recipe-dir . \
           --experimental \
           --skip-existing=all --target-platform=$TARGET_PLATFORM \
           -c https://prefix.dev/mts-forge -c conda-forge
