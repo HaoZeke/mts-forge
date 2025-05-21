@@ -32,7 +32,6 @@ build:
 requirements:
   build:
     - ${{ compiler('c') }}
-    - ${{ stdlib("c") }}
     - ${{ compiler('cxx') }}
     - make
     - sccache
@@ -42,6 +41,9 @@ requirements:
     - if: osx
       then:
         - llvm-openmp
+    - if: osx and x86_64
+      then:
+        - ${{ stdlib("c") }}
   host:
     - if: mpi != "nompi"
       then:
