@@ -8,8 +8,8 @@ context:
     else 0)) }}
   git_rev: 1b9bb35e84685e4d782eb805a0bf721d05a107b9
   mpi_prefix:
-    - if: mpi == nompi
-      then: nompi
+    - if: mpi == "nompi"
+      then: "nompi"
       else: mpi_${{mpi}}
 
 package:
@@ -38,14 +38,14 @@ requirements:
     - ${{ compiler('cxx') }}
     - make
     - sccache
-    - if: (build_platform != target_platform) and (mpi == openmpi)
+    - if: (build_platform != target_platform) and (mpi == "openmpi")
       then:
         - ${{ mpi }}
     - if: osx
       then:
         - llvm-openmp
   host:
-    - if: mpi != nompi
+    - if: mpi != "nompi"
       then:
         - ${{ mpi }}
     - boost-cpp
@@ -59,7 +59,7 @@ requirements:
       then:
         - llvm-openmp
   run:
-    - if: mpi != nompi
+    - if: mpi != "nompi"
       then:
         - ${{ mpi }}
     - boost-cpp
