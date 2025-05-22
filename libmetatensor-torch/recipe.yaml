@@ -1,0 +1,66 @@
+context:
+  version: "0.7.6"
+  build_num: 0
+  base_url: "https://github.com/lab-cosmo/metatensor/releases/download"
+
+package:
+  name: libmetatensor-torch
+  version: ${{ version }}
+
+source:
+  url: ${{ base_url }}/metatensor-torch-v${{ version }}/metatensor-torch-cxx-${{ version }}.tar.gz
+  sha256: 8dcc07c86094034facba09ebcc6b52f41847c2413737c8f9c88ae0a2990f8d41
+
+build:
+  number: 0
+
+
+requirements:
+  build:
+    - ${{ compiler('cxx') }}
+    - ${{ stdlib("c") }}
+    - cmake
+    - ninja
+  host:
+    - libmetatensor >=0.1.13,<0.2
+    # We build against the CPU version of torch to not have to deal with CUDA
+    # compilers (torch's CMake targets tries to find CUDA compilers even when
+    # there is no CUDA code to build). This does not impact the `run`
+    # dependency, since libtorch `run_exports` are variant agnostic
+    - libtorch * cpu*
+  run_exports:
+    - ${{ pin_subpackage('libmetatensor-torch', upper_bound='x.x') }}
+
+# tests:
+#   - script:
+#       - if: not win
+#         then: test -f $PREFIX/lib/libmetatensor_torch$SHLIB_EXT
+#         else: if not exist %PREFIX%\\Library\\bin\\metatensor_torch.dll exit 1
+#       - cmake -G Ninja -S test-project -B test-project
+#       - cmake --build test-project
+#       - ctest --verbose --output-on-failure --test-dir test-project
+#     files:
+#       source:
+#         - test-project/
+#     requirements:
+#       run:
+#         - cmake
+#         - ninja
+#         - ${{ compiler('cxx') }}
+#         - libtorch * cpu*
+
+about:
+  homepage: https://github.com/metatensor/metatensor
+  summary: TorchScript/C++ bindings to metatensor
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file:
+    - LICENSE
+    - _deps/nlohmann_json-src/LICENSE.MIT
+  documentation: https://docs.metatensor.org
+
+extra:
+  recipe-maintainers:
+    - Luthaf
+    - PicoCentauri
+    - HaoZeke
