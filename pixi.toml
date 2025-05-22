@@ -1,6 +1,6 @@
 [workspace]
 authors = ["Rohit Goswami <rohit.goswami@epfl.ch>"]
-channels = ["https://prefix.dev/mts-forge","conda-forge"]
+channels = ["https://prefix.dev/mts-forge", "conda-forge"]
 name = "mts-forge"
 platforms = ["linux-64", "osx-arm64", "osx-64"]
 version = "0.1.0"
