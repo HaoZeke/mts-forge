@@ -26,6 +26,8 @@ export CPPFLAGS="-I$PREFIX/include/torch/csrc/api/include $CPPFLAGS"
 # enable MPI
 if [[ $USE_MPI ]]; then
 export CXX=mpic++
+else
+export CXX=$CXX
 fi
 
 # Setup sccache

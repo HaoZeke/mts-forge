@@ -41,11 +41,9 @@ requirements:
     - make
     - sccache
     - if: (build_platform != target_platform) and (mpi == "openmpi")
-      then:
-        - ${{ mpi }}
+      then: ${{ mpi }}
     - if: osx
-      then:
-        - llvm-openmp
+      then: llvm-openmp
   host:
     - if: mpi != "nompi"
       then:
@@ -58,19 +56,16 @@ requirements:
     - libtorch
     - libmetatensor-torch >=0.7.6,<0.8
     - if: osx
-      then:
-        - llvm-openmp
+      then: llvm-openmp
   run:
     - if: mpi != "nompi"
-      then:
-        - ${{ mpi }}
+      then: ${{ mpi }}
     - boost-cpp
     - libtorch
     - openblas
     - libmetatensor-torch >=0.7.6,<0.8
     - if: osx
-      then:
-        - llvm-openmp
+      then: llvm-openmp
 
 tests:
   - script:
