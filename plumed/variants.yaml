@@ -1,4 +1,5 @@
 mpi:
+  - mpich
   - openmpi
   - nompi
 c_stdlib:
