@@ -55,6 +55,7 @@ requirements:
     - gsl
     - openblas
     - zlib
+    - libtorch
     - libmetatensor-torch >=0.7.6,<0.8
     - if: osx
       then:
@@ -64,6 +65,8 @@ requirements:
       then:
         - ${{ mpi }}
     - boost-cpp
+    - libtorch
+    - openblas
     - libmetatensor-torch >=0.7.6,<0.8
     - if: osx
       then:
