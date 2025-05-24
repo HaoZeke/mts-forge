@@ -1,6 +1,13 @@
 context:
-  version: "2.10.dev2"
-  git_rev: "1b9bb35e84685e4d782eb805a0bf721d05a107b9"
+  version: "2.10.dev3"
+  build_pre: 0
+  build_num: >
+    ${{ (build_pre | int + 2000) if mpi == "openmpi"
+    else ((build_pre | int + 1000) if mpi == "mpich"
+    else ((build_pre | int) if mpi == "nompi"
+    else 0)) }}
+  git_rev: 229007ace3b956295d9d3841a6596891c59cdf04
+  mpi_prefix: "${{ 'nompi' if mpi == 'nompi' else 'mpi_' + mpi }}"
 
 package:
   name: plumed
@@ -11,55 +18,69 @@ source:
   rev: ${{ git_rev }}
 
 build:
-  number: 1
+  # add build string so packages can depend on
+  # mpi or nompi variants
+  # dependencies:
+  # `pkg * mpi_mpich_*` for mpich
+  # `pkg * mpi_*` for any mpi
+  number: ${{ build_num }}
+  string: ${{ mpi_prefix }}_h${{ hash }}_${{ build_num }}
   skip:
     - win
-  script: build.sh
+  script:
+    file: build.sh
+    env:
+     USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
+     _CCACHE: ${{ env.get("_CCACHE", default=0) }}
 
 requirements:
   build:
     - ${{ compiler('c') }}
     - ${{ compiler('cxx') }}
+    - ${{ stdlib("c") }}
     - make
     - sccache
+    - if: (build_platform != target_platform) and (mpi == "openmpi")
+      then: ${{ mpi }}
     - if: osx
-      then:
-        - llvm-openmp
+      then: llvm-openmp
   host:
+    - if: mpi != "nompi"
+      then:
+        - ${{ mpi }}
     - boost-cpp
-    - openmpi
     - fftw
     - gsl
     - openblas
     - zlib
     - libtorch
-    - libmetatensor-torch >=0.5.0,<0.6.0
+    - libmetatensor-torch >=0.7.6,<0.8
     - if: osx
-      then:
-        - llvm-openmp
+      then: llvm-openmp
   run:
+    - if: mpi != "nompi"
+      then: ${{ mpi }}
     - boost-cpp
-    - openmpi
     - libtorch
-    - libmetatensor-torch >=0.5.0,<0.6.0
+    - openblas
+    - libmetatensor-torch >=0.7.6,<0.8
     - if: osx
-      then:
-        - llvm-openmp
+      then: llvm-openmp
 
 tests:
   - script:
-    - plumed info --root
-    - plumed info --long-version
-    - plumed-patch -h
-    - plumed config has external_blas external_lapack fftw gsl zlib
-    - $PREFIX/lib/plumed/plumed-runtime -h
-    - test -f $PREFIX/lib/libplumed$SHLIB_EXT
-    - test -f $PREFIX/lib/libplumedWrapper.a
-    - test -f $PREFIX/lib/libplumedKernel$SHLIB_EXT
-    - conda inspect linkages -p $PREFIX $PKG_NAME
-    - if: osx
-      then:
-        - conda inspect objects -p $PREFIX $PKG_NAME
+      - plumed info --root
+      - plumed info --long-version
+      - plumed-patch -h
+      - plumed config has external_blas external_lapack fftw gsl zlib
+      - $PREFIX/lib/plumed/plumed-runtime -h
+      - test -f $PREFIX/lib/libplumed$SHLIB_EXT
+      - test -f $PREFIX/lib/libplumedWrapper.a
+      - test -f $PREFIX/lib/libplumedKernel$SHLIB_EXT
+      - conda inspect linkages -p $PREFIX $PKG_NAME
+      - if: osx
+        then:
+          - conda inspect objects -p $PREFIX $PKG_NAME
     requirements:
       run:
         - conda-build
@@ -69,12 +90,12 @@ about:
   license: LGPL-3.0
   license_family: GPL
   license_file: COPYING.LESSER
-  summary: 'Free energy calculations in molecular systems'
+  summary: "Free energy calculations in molecular systems"
   description: |
-    PLUMED is an open source library for free energy calculations in
-    molecular systems which works together with some of the most
-    popular molecular dynamics engines.
-  documentation: https://www.plumed.org/doc
+    PLUMED is an open source library for free energy calculations in molecular
+    systems which works together with some of the most popular molecular
+    dynamics engines. This version is instrumented for working with Metatensor.
+  documentation: https://docs.metatensor.org/latest/atomistic/engines/plumed.html
   repository: https://github.com/plumed/plumed2
 
 extra:
