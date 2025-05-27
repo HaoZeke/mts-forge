@@ -33,8 +33,11 @@ fi
 # Setup sccache
 # Remember to build with rattler-build build --no-build-id --recipe ..
 if [[ $_CCACHE ]]; then
-export C="sccache $C"
+export CC="sccache $CC"
 export CXX="sccache $CXX"
+else
+export C="$C"
+export CXX="$CXX"
 fi
 
 # python is disabled since it should be provided as a separate package
@@ -48,7 +51,7 @@ fi
             --disable-static-archive \
             --enable-modules=all \
             --enable-boost_serialization \
-            --enable-metatensor \
+            --enable-metatomic \
             --enable-libtorch
 
 make "-j${CPU_COUNT}" "${VERBOSE_AT}"

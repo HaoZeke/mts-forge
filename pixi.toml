@@ -12,6 +12,7 @@ build = "rattler-build build --experimental --recipe "
 # Cached build
 # https://rattler.build/latest/tips_and_tricks/#using-sccache-or-ccache-with-rattler-build
 bcc = "_CCACHE=1 rattler-build build --experimental --no-build-id --recipe "
+bcca = "_CCACHE=1 rattler-build build --experimental --no-build-id --skip-existing=all --recipe-dir ."
 
 [dependencies]
 rattler-build = ">=0.40.0,<0.42"

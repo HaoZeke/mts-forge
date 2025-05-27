@@ -1,13 +1,13 @@
 context:
   version: "2.10.dev3"
-  build_pre: 0
+  build_pre: 1
   build_num: >
     ${{ (build_pre | int + 2000) if mpi == "openmpi"
     else ((build_pre | int + 1000) if mpi == "mpich"
     else ((build_pre | int) if mpi == "nompi"
     else 0)) }}
   git_rev: 229007ace3b956295d9d3841a6596891c59cdf04
-  mpi_prefix: "${{ 'nompi' if mpi == 'nompi' else 'mpi_' + mpi }}"
+  mpi_prefix: "${{ 'mpi_' + mpi }}"
 
 package:
   name: plumed
