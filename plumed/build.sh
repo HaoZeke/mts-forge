@@ -1,5 +1,23 @@
 #!/usr/bin/env bash
 
+set -ex
+
+# enable MPI
+if [[ $USE_MPI ]]; then
+  export CXX="$PREFIX/bin/mpicxx"
+  export CC="$PREFIX/bin/mpicc"
+fi
+
+# Setup sccache
+# Remember to build with rattler-build build --no-build-id --recipe ..
+if [[ $_CCACHE ]]; then
+export CC="sccache $CC"
+export CXX="sccache $CXX"
+else
+export C="$C"
+export CXX="$CXX"
+fi
+
 if [[ $(uname) == "Linux" ]]; then
 # STATIC_LIBS is a PLUMED specific option and is required on Linux for the following reason:
 # When using env modules the dependent libraries can be found through the
@@ -23,23 +41,6 @@ export LIBS="-lmetatensor_torch -lmetatensor -ltorch -lc10 -ltorch_cpu $LIBS"
 # libtorch puts some headers in a non-standard place
 export CPPFLAGS="-I$PREFIX/include/torch/csrc/api/include $CPPFLAGS"
 
-# enable MPI
-if [[ $USE_MPI ]]; then
-export CXX=mpic++
-else
-export CXX=$CXX
-fi
-
-# Setup sccache
-# Remember to build with rattler-build build --no-build-id --recipe ..
-if [[ $_CCACHE ]]; then
-export CC="sccache $CC"
-export CXX="sccache $CXX"
-else
-export C="$C"
-export CXX="$CXX"
-fi
-
 # python is disabled since it should be provided as a separate package
 # --disable-libsearch forces to link only explicitely requested libraries
 # --disable-static-patch avoid tests that are only required for static patches
@@ -51,7 +52,7 @@ fi
             --disable-static-archive \
             --enable-modules=all \
             --enable-boost_serialization \
-            --enable-metatomic \
+            --enable-metatensor \
             --enable-libtorch
 
 make "-j${CPU_COUNT}" "${VERBOSE_AT}"
