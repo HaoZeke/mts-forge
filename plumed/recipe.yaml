@@ -26,7 +26,7 @@ build:
   number: ${{ build_num }}
   string: ${{ mpi_prefix }}_h${{ hash }}_${{ build_num }}
   skip:
-    - not (mpi == "nompi")
+    # - not (mpi == "nompi")
     - win
   script:
     file: build.sh
