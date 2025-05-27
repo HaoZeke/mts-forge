@@ -3,18 +3,21 @@
 set -ex
 
 # enable MPI
-if [[ $USE_MPI ]]; then
+if [[ "$USE_MPI" == 1 ]]; then
   export CXX="$PREFIX/bin/mpicxx"
   export CC="$PREFIX/bin/mpicc"
+  export MPI_FLAG="--enable-mpi"
+else
+  export MPI_FLAG="--disable-mpi"
 fi
 
 # Setup sccache
 # Remember to build with rattler-build build --no-build-id --recipe ..
-if [[ $_CCACHE ]]; then
+if [[ "$_CCACHE" == 1 ]]; then
 export CC="sccache $CC"
 export CXX="sccache $CXX"
 else
-export C="$C"
+export CC="$CC"
 export CXX="$CXX"
 fi
 
@@ -47,6 +50,7 @@ export CPPFLAGS="-I$PREFIX/include/torch/csrc/api/include $CPPFLAGS"
 # --disable-static-archive makes package smaller
 ./configure --prefix="$PREFIX" \
             --disable-python \
+            "$MPI_FLAG" \
             --disable-libsearch \
             --disable-static-patch \
             --disable-static-archive \
