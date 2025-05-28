@@ -1,0 +1,10 @@
+c_stdlib:
+  - if: osx # We don't build 32 bit anyway, and this is for arm and x64
+    then: macosx_deployment_target
+    else: sysroot
+c_stdlib_version:
+  - if: osx
+    then: "11.0"
+    else: "2.28"
+MACOSX_SDK_VERSION:
+  - "11.0"
