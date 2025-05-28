@@ -13,7 +13,7 @@ fi
 
 # Setup sccache
 # Remember to build with rattler-build build --no-build-id --recipe ..
-if [[ "$_CCACHE" == 1 ]]; then
+if [[ "$USE_SCCACHE" == 1 ]]; then
 export CC="sccache $CC"
 export CXX="sccache $CXX"
 else
@@ -56,7 +56,7 @@ export CPPFLAGS="-I$PREFIX/include/torch/csrc/api/include $CPPFLAGS"
             --disable-static-archive \
             --enable-modules=all \
             --enable-boost_serialization \
-            --enable-metatensor \
+            --enable-libmetatomic \
             --enable-libtorch
 
 make "-j${CPU_COUNT}" "${VERBOSE_AT}"
