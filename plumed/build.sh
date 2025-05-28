@@ -39,7 +39,7 @@ export CXXFLAGS="${CXXFLAGS//-O2/-O3}"
 
 # libraries are explicitly listed here due to --disable-libsearch
 export LIBS="-lboost_serialization -lfftw3 -lgsl -lgslcblas -llapack -lblas -lz $LIBS"
-export LIBS="-lmetatensor_torch -lmetatensor -ltorch -lc10 -ltorch_cpu $LIBS"
+export LIBS="-lmetatensor_torch -lmetatomic_torch -lmetatensor -ltorch -lc10 -ltorch_cpu $LIBS"
 
 # libtorch puts some headers in a non-standard place
 export CPPFLAGS="-I$PREFIX/include/torch/csrc/api/include $CPPFLAGS"
