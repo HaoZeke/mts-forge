@@ -72,10 +72,14 @@ jobs:
         TARGET_PLATFORM: ${{ matrix.target }}
         MACOSX_DEPLOYMENT_TARGET: "11.0"
       run: |
-        pixi r build-sccache libmetatomic-torch --target-platform=$TARGET_PLATFORM \
-          -c https://prefix.dev/mts-forge -c conda-forge && \
-        pixi r build-sccache plumed --target-platform=$TARGET_PLATFORM \
-          -c https://prefix.dev/mts-forge -c conda-forge
+        pixi r build-sccache libmetatomic-torch \
+        --target-platform=$TARGET_PLATFORM \
+        -c https://prefix.dev/mts-forge -c conda-forge \
+        --skip-existing=all && \
+        pixi r build-sccache plumed \
+        --target-platform=$TARGET_PLATFORM \
+        -c https://prefix.dev/mts-forge -c conda-forge \
+        --skip-existing=all
 
     - name: Upload all packages
       shell: bash
