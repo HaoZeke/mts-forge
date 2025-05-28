@@ -43,6 +43,9 @@ export LIBS="-lmetatensor_torch -lmetatomic_torch -lmetatensor -ltorch -lc10 -lt
 
 # libtorch puts some headers in a non-standard place
 export CPPFLAGS="-I$PREFIX/include/torch/csrc/api/include $CPPFLAGS"
+# macos backfill
+export CPPFLAGS="-D_LIBCPP_DISABLE_AVAILABILITY $CPPFLAGS"
+export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 
 # python is disabled since it should be provided as a separate package
 # --disable-libsearch forces to link only explicitely requested libraries
