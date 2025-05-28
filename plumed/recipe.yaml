@@ -31,7 +31,7 @@ build:
     file: build.sh
     env:
      USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
-     USE_SCCACHE: ${{ env.get("_CCACHE", default=0) }}
+     USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
 
 requirements:
   build:
@@ -54,7 +54,7 @@ requirements:
     - openblas
     - zlib
     - libtorch
-    - libmetatensor-torch >=0.7.6,<0.8
+    - libmetatomic-torch >=0.1.1,<0.2
     - if: osx
       then: llvm-openmp
   run:
@@ -63,7 +63,7 @@ requirements:
     - boost-cpp
     - libtorch
     - openblas
-    - libmetatensor-torch >=0.7.6,<0.8
+    - libmetatomic-torch >=0.1.1,<0.2
     - if: osx
       then: llvm-openmp
 

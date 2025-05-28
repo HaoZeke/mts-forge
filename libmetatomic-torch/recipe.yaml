@@ -16,7 +16,7 @@ build:
   script:
     file: build.nu
     env:
-     USE_SCCACHE: ${{ env.get("_CCACHE", default=0) }}
+     USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
 
 
 requirements:
