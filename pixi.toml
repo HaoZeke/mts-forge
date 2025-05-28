@@ -1,6 +1,6 @@
 [workspace]
 authors = ["Rohit Goswami <rohit.goswami@epfl.ch>"]
-channels = ["https://prefix.dev/mts-forge", "conda-forge"]
+channels = ["https://prefix.dev/mts-forge", "metatensor", "conda-forge"]
 name = "mts-forge"
 platforms = ["linux-64", "osx-arm64", "osx-64"]
 version = "0.1.0"
@@ -11,8 +11,8 @@ description = "Forge for metatensor enabled software and tooling"
 build = "rattler-build build --experimental --recipe "
 # Cached build
 # https://rattler.build/latest/tips_and_tricks/#using-sccache-or-ccache-with-rattler-build
-bcc = "_CCACHE=1 rattler-build build --experimental --no-build-id --recipe "
-bcca = "_CCACHE=1 rattler-build build --experimental --no-build-id --skip-existing=all --recipe-dir ."
+build-sccache = "USE_SCCACHE=1 rattler-build build --experimental --no-build-id --recipe "
+build-all-sccache = "USE_SCCACHE=1 rattler-build build --experimental --no-build-id --skip-existing=all --recipe-dir ."
 
 [dependencies]
 rattler-build = ">=0.40.0,<0.42"
