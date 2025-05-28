@@ -6,7 +6,8 @@ if $env.USE_SCCACHE == 1 {
 }
 
 # --- CPPFLAGS for Plumed Kernel ---
-$env.CXXFLAGS = (($env.CXXFLAGS? | default []) | append "-D_LIBCPP_DISABLE_AVAILABILITY")
+let existing_cppflags = ($env.CPPFLAGS? | default '')
+$env.CPPFLAGS = $"-D_LIBCPP_DISABLE_AVAILABILITY ($existing_cppflags)" | str trim
 
 ^cmake -G Ninja ($env.CMAKE_ARGS) -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=($env.PREFIX) .
 ^cmake --build . --config Release --target install
