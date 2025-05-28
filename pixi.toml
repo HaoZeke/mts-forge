@@ -15,5 +15,5 @@ build-sccache = "USE_SCCACHE=1 rattler-build build --experimental --no-build-id 
 build-all-sccache = "USE_SCCACHE=1 rattler-build build --experimental --no-build-id --skip-existing=all --recipe-dir ."
 
 [dependencies]
-rattler-build = ">=0.40.0,<0.42"
-conda-index = ">=0.6.0,<0.7"
+rattler-build = ">=0.42.1,<0.43"
+conda-index = ">=0.6.1,<0.7"

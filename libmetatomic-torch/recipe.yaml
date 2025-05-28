@@ -1,6 +1,6 @@
 context:
   version: "0.1.1"
-  build_num: 0
+  build_num: 1
 
 package:
   name: libmetatomic-torch
@@ -28,6 +28,7 @@ requirements:
     - cmake
     - ninja
     - nushell
+    - sccache
   host:
     - libmetatensor >=0.1.14,<0.2
     - libmetatensor-torch >=0.7.5,<0.8

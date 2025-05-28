@@ -3,8 +3,12 @@
 let host_prefix_expanded = ($env.PREFIX | path expand)
 # Remember to build with rattler-build build --no-build-id --recipe ..
 if ($env.USE_SCCACHE == "1") {
- $env.CXX = $"sccache ($env.CXX)"
- $env.CC = $"sccache ($env.CC)"
+let current_cxx = ($env.CXX? | default (which cpp).path.0)
+let current_cc = ($env.CC? | default (which cc).path.0)
+ if not ($current_cc starts-with "sccache") {
+ $env.CXX = $"sccache ($current_cxx)"
+ $env.CC = $"sccache ($current_cc)"
+ }
 }
 
 let existing_cxxflags = ($env.CXXFLAGS? | default '')

@@ -66,7 +66,7 @@ jobs:
           ${{ runner.os }}-${{ matrix.target }}-rattler-pkgs-${{ github.ref }}-
           ${{ runner.os }}-${{ matrix.target }}-rattler-pkgs-refs/heads/main-
 
-    - name: Run code in changed subdirectories
+    - name: Build libmetatomic-torch
       shell: bash
       env:
         TARGET_PLATFORM: ${{ matrix.target }}
@@ -75,11 +75,19 @@ jobs:
         pixi r build-sccache libmetatomic-torch \
         --target-platform=$TARGET_PLATFORM \
         -c https://prefix.dev/mts-forge -c conda-forge \
-        --skip-existing=all && \
-        pixi r build-sccache plumed \
-        --target-platform=$TARGET_PLATFORM \
-        -c https://prefix.dev/mts-forge -c conda-forge \
         --skip-existing=all
+
+    - name: Build plumed
+      shell: bash
+      env:
+        TARGET_PLATFORM: ${{ matrix.target }}
+        MACOSX_DEPLOYMENT_TARGET: "11.0"
+      run: |
+        pixi r build-sccache plumed \
+          --target-platform=$TARGET_PLATFORM \
+          -c https://prefix.dev/mts-forge -c conda-forge \
+          --skip-existing=all --continue-on-failure
+          cat "/Users/runner/work/mts-forge/mts-forge/output/bld/rattler-build_plumed/work/config.log"
 
     - name: Upload all packages
       shell: bash

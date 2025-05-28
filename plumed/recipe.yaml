@@ -1,6 +1,6 @@
 context:
   version: "2.10.dev4"
-  build_pre: 0
+  build_pre: 1
   build_num: >
     ${{ (build_pre | int + 2000) if mpi == "openmpi"
     else ((build_pre | int + 1000) if mpi == "mpich"
@@ -28,7 +28,7 @@ build:
   skip:
     - win
   script:
-    file: build.sh
+    file: build.nu
     env:
      USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
      USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
@@ -40,6 +40,7 @@ requirements:
     - ${{ stdlib("c") }}
     - make
     - sccache
+    - nushell
     - if: (build_platform != target_platform) and (mpi == "openmpi")
       then: ${{ mpi }}
     - if: osx
