@@ -86,8 +86,7 @@ jobs:
         pixi r build-sccache plumed \
           --target-platform=$TARGET_PLATFORM \
           -c https://prefix.dev/mts-forge -c conda-forge \
-          --skip-existing=all --continue-on-failure
-          cat "/Users/runner/work/mts-forge/mts-forge/output/bld/rattler-build_plumed/work/config.log"
+          --skip-existing=all
 
     - name: Upload all packages
       shell: bash
