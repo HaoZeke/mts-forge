@@ -1,6 +1,7 @@
 #!/usr/bin/env nu
 
 let host_prefix_expanded = ($env.PREFIX | path expand)
+
 if ($env.USE_MPI == "1") {
  $env.CXX = $"($host_prefix_expanded)/bin/mpicxx"
  $env.CC = $"($host_prefix_expanded)/bin/mpicc"
@@ -26,6 +27,27 @@ if ($nu.os-info.name == "linux") {
     $env.STATIC_LIBS = $"-Wl,-rpath-link,($host_prefix_expanded)/lib"
 }
 
+# --- LDFLAGS Setup ---
+let host_lib_path = $"($host_prefix_expanded)/lib"
+let required_host_ldflags_additions = [
+    $"-L($host_lib_path)",
+    $"-Wl,-rpath,($host_lib_path)",
+    $"-Wl,-rpath-link,($host_lib_path)"
+]
+
+let current_ldflags_list = ($env.LDFLAGS? | default "" | split row " " | where not ($it == ""))
+
+# Prepend our required host LDFLAGS additions, then add the existing LDFLAGS.
+# 'uniq' will handle if rattler-build eventually provides some of these for Nu too.
+$env.LDFLAGS = (
+    $required_host_ldflags_additions
+    | append $current_ldflags_list # Add existing flags after our crucial ones
+    | uniq # Remove duplicates if any overlap
+    | str join " " | str trim
+)
+print $"INFO: Nushell script set LDFLAGS to: ($env.LDFLAGS)"
+# --- End LDFLAGS ---
+
 $env.CFLAGS = [
   ($env.CFLAGS? | default ''),
 ] | str replace --all --regex '-O[*[:xdigit:]+]' "-O3"
@@ -34,6 +56,7 @@ $env.CFLAGS = [
 $env.CPPFLAGS = [
   # we also store path so that software linking libplumedWrapper.a knows where libplumedKernel can be found.
   $"-D__PLUMED_DEFAULT_KERNEL=($host_prefix_expanded)/lib/libplumedKernel($env.SHLIB_EXT?)",
+  $"-I($host_prefix_expanded)/include/",
   # libtorch puts some headers in a non-standard place
   $"-I($host_prefix_expanded)/include/torch/csrc/api/include",
   ($env.CPPFLAGS? | default ''),
@@ -49,6 +72,7 @@ $env.CXXFLAGS = [
 
 let additional_libs = [
  # Deps for metatomic PLUMED
+ "dl"
  "metatomic_torch",
  "metatensor",
  "torch",
