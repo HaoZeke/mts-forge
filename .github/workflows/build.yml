@@ -31,7 +31,7 @@ jobs:
         TARGET_PLATFORM: ${{ matrix.target }}
       name: Build libmetatomic-torch
       run: |-
-        pixi r build-sccache libmetatomic-torch% \
+        pixi r build-sccache libmetatomic-torch \
         --target-platform=$TARGET_PLATFORM \
         -c https://prefix.dev/mts-forge -c conda-forge \
         --skip-existing=all
@@ -41,7 +41,7 @@ jobs:
         TARGET_PLATFORM: ${{ matrix.target }}
       name: Build plumed
       run: |-
-        pixi r build-sccache plumed% \
+        pixi r build-sccache plumed \
         --target-platform=$TARGET_PLATFORM \
         -c https://prefix.dev/mts-forge -c conda-forge \
         --skip-existing=all
