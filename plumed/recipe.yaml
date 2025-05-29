@@ -28,7 +28,7 @@ build:
   skip:
     - win
   script:
-    file: build.nu
+    file: build.sh
     env:
       USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
       USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
