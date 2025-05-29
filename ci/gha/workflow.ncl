@@ -1,3 +1,6 @@
+# Usage:
+# cd $GITROOT/ci/gha
+# nickel export --format yaml workflow.ncl -o ../../.github/workflows/build.yml
 let makeBuildStep = fun packageName =>
   {
     name = "Build %{packageName}",
