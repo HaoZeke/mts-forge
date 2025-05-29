@@ -17,3 +17,4 @@ build-all-sccache = "USE_SCCACHE=1 rattler-build build --experimental --no-build
 [dependencies]
 rattler-build = ">=0.42.1,<0.43"
 conda-index = ">=0.6.1,<0.7"
+nickel = ">=9.9.9,<10"
