@@ -39,9 +39,9 @@ jobs:
     - env:
         MACOSX_DEPLOYMENT_TARGET: '11.0'
         TARGET_PLATFORM: ${{ matrix.target }}
-      name: Build plumed
+      name: Build plumed_mts
       run: |-
-        pixi r build-sccache plumed \
+        pixi r build-sccache plumed_mts \
         --target-platform=$TARGET_PLATFORM \
         -c https://prefix.dev/mts-forge -c conda-forge \
         --skip-existing=all
