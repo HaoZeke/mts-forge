@@ -7,10 +7,11 @@ context:
     else ((build_pre | int) if mpi == "nompi"
     else 0)) }}
   git_rev: 9a880decf4f2c312e9083978619eb00299ea2ac3
+  prog_suffix: "_mts"
   mpi_prefix: "${{ 'mpi_' + mpi }}"
 
 package:
-  name: plumed
+  name: plumed${{ prog_suffix }}
   version: ${{ version }}
 
 source:
@@ -32,6 +33,7 @@ build:
     env:
       USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
       USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
+      PSUFFIX: ${{ prog_suffix }}
 
 requirements:
   build:
@@ -70,14 +72,14 @@ requirements:
 
 tests:
   - script:
-      - plumed info --root
-      - plumed info --long-version
-      - plumed-patch -h
-      - plumed config has external_blas external_lapack fftw gsl zlib
-      - $PREFIX/lib/plumed/plumed-runtime -h
-      - test -f $PREFIX/lib/libplumed$SHLIB_EXT
-      - test -f $PREFIX/lib/libplumedWrapper.a
-      - test -f $PREFIX/lib/libplumedKernel$SHLIB_EXT
+      - plumed${{ prog_suffix }} info --root
+      - plumed${{ prog_suffix }} info --long-version
+      - plumed${{ prog_suffix }}-patch -h
+      - plumed${{ prog_suffix }} config has external_blas external_lapack fftw gsl zlib libmetatomic
+      - $PREFIX/lib/plumed${{ prog_suffix }}/plumed-runtime -h
+      - test -f $PREFIX/lib/libplumed${{ prog_suffix }}$SHLIB_EXT
+      - test -f $PREFIX/lib/libplumed${{ prog_suffix }}Wrapper.a
+      - test -f $PREFIX/lib/libplumed${{ prog_suffix }}Kernel$SHLIB_EXT
       - conda inspect linkages -p $PREFIX $PKG_NAME
       - if: osx
         then:

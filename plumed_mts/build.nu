@@ -1,12 +1,13 @@
 #!/usr/bin/env nu
 
 let host_prefix_expanded = ($env.PREFIX | path expand)
+let psuffix = ($env.PROG_PREFIX)
+let use_mpi = $env.USE_MPI
 
 if ($env.USE_MPI == "1") {
  $env.CXX = $"($host_prefix_expanded)/bin/mpicxx"
  $env.CC = $"($host_prefix_expanded)/bin/mpicc"
- $env.MPI_FLAG = "--enable-mpi"
-} else { $env.MPI_FLAG = "--disable-mpi" }
+}
 
 # Remember to build with rattler-build build --no-build-id --recipe ..
 if ($env.USE_SCCACHE == "1") {
@@ -25,28 +26,28 @@ if ($nu.os-info.name == "linux") {
     # LD_LIBRARY_PATH or encoded configuring with -rpath.
     # Conda does not use LD_LIBRARY_PATH and it is thus necessary to suggest where libraries are.
     $env.STATIC_LIBS = $"-Wl,-rpath-link,($host_prefix_expanded)/lib"
+
+    # --- LDFLAGS Setup ---
+    let host_lib_path = $"($host_prefix_expanded)/lib"
+    let required_host_ldflags_additions = [
+        $"-L($host_lib_path)",
+        $"-Wl,-rpath,($host_lib_path)",
+        $"-Wl,-rpath-link,($host_lib_path)"
+    ]
+
+    let current_ldflags_list = ($env.LDFLAGS? | default "" | split row " " | where not ($it == ""))
+
+    # Prepend our required host LDFLAGS additions, then add the existing LDFLAGS.
+    # 'uniq' will handle if rattler-build eventually provides some of these for Nu too.
+    $env.LDFLAGS = (
+        $required_host_ldflags_additions
+        | append $current_ldflags_list # Add existing flags after our crucial ones
+        | uniq # Remove duplicates if any overlap
+        | str join " " | str trim
+    )
+    print $"INFO: Nushell script set LDFLAGS to: ($env.LDFLAGS)"
+    # --- End LDFLAGS ---
 }
-
-# --- LDFLAGS Setup ---
-let host_lib_path = $"($host_prefix_expanded)/lib"
-let required_host_ldflags_additions = [
-    $"-L($host_lib_path)",
-    $"-Wl,-rpath,($host_lib_path)",
-    $"-Wl,-rpath-link,($host_lib_path)"
-]
-
-let current_ldflags_list = ($env.LDFLAGS? | default "" | split row " " | where not ($it == ""))
-
-# Prepend our required host LDFLAGS additions, then add the existing LDFLAGS.
-# 'uniq' will handle if rattler-build eventually provides some of these for Nu too.
-$env.LDFLAGS = (
-    $required_host_ldflags_additions
-    | append $current_ldflags_list # Add existing flags after our crucial ones
-    | uniq # Remove duplicates if any overlap
-    | str join " " | str trim
-)
-print $"INFO: Nushell script set LDFLAGS to: ($env.LDFLAGS)"
-# --- End LDFLAGS ---
 
 $env.CFLAGS = [
   ($env.CFLAGS? | default ''),
@@ -97,10 +98,12 @@ $env.LIBS = $"($additional_libs) ($existing_libs) "
 let configure_args = [
     $"--prefix=($host_prefix_expanded)",
     "--disable-python",
-    $env.MPI_FLAG,
+    $"--program-suffix=($psuffix)",
+    (if $use_mpi == "1" {"--enable-mpi"} else "--disable-mpi"),
     "--disable-libsearch",
     "--disable-static-patch",
     "--disable-static-archive",
+    "--disable-molfile-plugins",
     "--enable-modules=all",
     "--enable-boost_serialization",
     "--enable-libmetatomic",

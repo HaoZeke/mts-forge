@@ -33,7 +33,7 @@ if [[ $(uname) == "Linux" ]]; then
 fi
 
 # we also store path so that software linking libplumedWrapper.a knows where libplumedKernel can be found.
-export CPPFLAGS="-D__PLUMED_DEFAULT_KERNEL=$PREFIX/lib/libplumedKernel$SHLIB_EXT $CPPFLAGS"
+export CPPFLAGS="-D__PLUMED_DEFAULT_KERNEL=$PREFIX/lib/libplumed${PSUFFIX}Kernel$SHLIB_EXT $CPPFLAGS"
 
 # enable optimization
 export CXXFLAGS="${CXXFLAGS//-O2/-O3}"
@@ -54,7 +54,9 @@ export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 ./configure --prefix="$PREFIX" \
             --disable-python \
             "$MPI_FLAG" \
+            --program-suffix="_mts" \
             --disable-libsearch \
+            --disable-molfile-plugins \
             --disable-static-patch \
             --disable-static-archive \
             --enable-modules=all \
