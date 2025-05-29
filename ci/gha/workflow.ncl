@@ -10,7 +10,7 @@ let makeBuildStep = fun packageName =>
       MACOSX_DEPLOYMENT_TARGET = "11.0",
     },
     run = m%"
-pixi r build-sccache %{packageName}% \
+pixi r build-sccache %{packageName} \
 --target-platform=$TARGET_PLATFORM \
 -c https://prefix.dev/mts-forge -c conda-forge \
 --skip-existing=all
