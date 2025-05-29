@@ -17,9 +17,6 @@ let current_cc = ($env.CC? | default (which cc).path.0)
  }
 }
 
-print $env.CC
-print $env.CXX
-
 # --- Linux Specifics ---
 if ($nu.os-info.name == "linux") {
     # STATIC_LIBS is a PLUMED specific option and is required on Linux for the following reason:
