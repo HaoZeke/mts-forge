@@ -1,13 +1,23 @@
 * mts-forge
 This is a forge for metatensor compatible software stacks.
 ** Usage
-Each package is built with ~rattler-build~. For convinience, these can be handled via ~pixi~ tasks.
-
+Installation of the packages in this forge is via:
+#+begin_src bash
+micromamba install -c "https://prefix.dev/mts-forge" plumed
+#+end_src
+*** Builds
+Each package is built with ~rattler-build~ using a ~nushell~ script for cross
+platform compatibility. For convinience, these can be handled via ~pixi~ tasks.
 #+begin_src bash
 # Classic build
 pixi run build $RECIPE
 # Builds a build cache variant with sccache
-pixi run bcc $RECIPE
+pixi run build-sccache $RECIPE
+#+end_src
+*** Workflows
+These are defined via the ~nickel~ configuration language and are exported as:
+#+begin_src bash
+nickel export --format yaml ci/gha/workflow.ncl -o .github/workflows/build.yml
 #+end_src
 ** TODO Setup ~conda_index~
 * License
