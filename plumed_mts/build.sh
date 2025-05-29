@@ -56,7 +56,6 @@ export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
             "$MPI_FLAG" \
             --program-suffix="_mts" \
             --disable-libsearch \
-            --disable-molfile-plugins \
             --disable-static-patch \
             --disable-static-archive \
             --enable-modules=all \

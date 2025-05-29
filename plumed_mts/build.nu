@@ -103,7 +103,6 @@ let configure_args = [
     "--disable-libsearch",
     "--disable-static-patch",
     "--disable-static-archive",
-    "--disable-molfile-plugins",
     "--enable-modules=all",
     "--enable-boost_serialization",
     "--enable-libmetatomic",
