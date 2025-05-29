@@ -30,14 +30,14 @@ build:
   script:
     file: build.nu
     env:
-     USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
-     USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
+      USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
+      USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
 
 requirements:
   build:
     - ${{ compiler('c') }}
     - ${{ compiler('cxx') }}
-    - ${{ stdlib("c") }}
+    - ${{ stdlib('c') }}
     - make
     - sccache
     - nushell
