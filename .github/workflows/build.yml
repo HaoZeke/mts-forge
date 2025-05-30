@@ -33,7 +33,6 @@ jobs:
       run: |-
         pixi r build-sccache plumed-metatomic \
         --target-platform=$TARGET_PLATFORM \
-        -c https://prefix.dev/mts-forge -c conda-forge \
         --skip-existing=all
       shell: bash
     - if: github.event_name == 'push'

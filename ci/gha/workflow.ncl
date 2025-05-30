@@ -12,7 +12,6 @@ let makeBuildStep = fun packageName =>
     run = m%"
 pixi r build-sccache %{packageName} \
 --target-platform=$TARGET_PLATFORM \
--c https://prefix.dev/mts-forge -c conda-forge \
 --skip-existing=all
 "%,
   }
