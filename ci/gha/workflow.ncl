@@ -68,8 +68,7 @@ ${{ runner.os }}-${{ matrix.target }}-rattler-pkgs-refs/heads/main-
 "%,
           }
         },
-        makeBuildStep "libmetatomic-torch",
-        makeBuildStep "plumed_mts",
+        makeBuildStep "plumed-metatomic",
         {
           name = "Upload all packages",
           shell = "bash",

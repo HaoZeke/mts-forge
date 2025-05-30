@@ -29,19 +29,9 @@ jobs:
     - env:
         MACOSX_DEPLOYMENT_TARGET: '11.0'
         TARGET_PLATFORM: ${{ matrix.target }}
-      name: Build libmetatomic-torch
+      name: Build plumed-metatomic
       run: |-
-        pixi r build-sccache libmetatomic-torch \
-        --target-platform=$TARGET_PLATFORM \
-        -c https://prefix.dev/mts-forge -c conda-forge \
-        --skip-existing=all
-      shell: bash
-    - env:
-        MACOSX_DEPLOYMENT_TARGET: '11.0'
-        TARGET_PLATFORM: ${{ matrix.target }}
-      name: Build plumed_mts
-      run: |-
-        pixi r build-sccache plumed_mts \
+        pixi r build-sccache plumed-metatomic \
         --target-platform=$TARGET_PLATFORM \
         -c https://prefix.dev/mts-forge -c conda-forge \
         --skip-existing=all

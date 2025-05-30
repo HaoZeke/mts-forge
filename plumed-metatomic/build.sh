@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# UNUSED
 
 set -ex
 
@@ -54,7 +53,7 @@ export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 ./configure --prefix="$PREFIX" \
             --disable-python \
             "$MPI_FLAG" \
-            --program-suffix="_mts" \
+            --program-suffix="$PSUFFIX" \
             --disable-libsearch \
             --disable-static-patch \
             --disable-static-archive \
@@ -63,5 +62,5 @@ export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
             --enable-libmetatomic \
             --enable-libtorch
 
-make "-j${CPU_COUNT}" "${VERBOSE_AT}"
+make "-j${CPU_COUNT}"
 make install

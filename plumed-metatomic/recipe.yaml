@@ -1,17 +1,17 @@
 context:
-  version: "2.10.dev4"
-  build_pre: 1
+  version: "2.10"
+  build_pre: 0
   build_num: >
     ${{ (build_pre | int + 2000) if mpi == "openmpi"
     else ((build_pre | int + 1000) if mpi == "mpich"
     else ((build_pre | int) if mpi == "nompi"
     else 0)) }}
   git_rev: 9a880decf4f2c312e9083978619eb00299ea2ac3
-  prog_suffix: "_mts"
+  program_suffix: "-metatomic"
   mpi_prefix: "${{ 'mpi_' + mpi }}"
 
 package:
-  name: plumed${{ prog_suffix }}
+  name: plumed${{ program_suffix }}
   version: ${{ version }}
 
 source:
@@ -33,7 +33,7 @@ build:
     env:
       USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
       USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
-      PSUFFIX: ${{ prog_suffix }}
+      PSUFFIX: ${{ program_suffix }}
 
 requirements:
   build:
@@ -42,7 +42,6 @@ requirements:
     - ${{ stdlib('c') }}
     - make
     - sccache
-    - nushell
     - if: (build_platform != target_platform) and (mpi == "openmpi")
       then: ${{ mpi }}
     - if: osx
@@ -72,14 +71,14 @@ requirements:
 
 tests:
   - script:
-      - plumed${{ prog_suffix }} info --root
-      - plumed${{ prog_suffix }} info --long-version
-      - plumed${{ prog_suffix }}-patch -h
-      - plumed${{ prog_suffix }} config has external_blas external_lapack fftw gsl zlib libmetatomic
-      - $PREFIX/lib/plumed${{ prog_suffix }}/plumed-runtime -h
-      - test -f $PREFIX/lib/libplumed${{ prog_suffix }}$SHLIB_EXT
-      - test -f $PREFIX/lib/libplumed${{ prog_suffix }}Wrapper.a
-      - test -f $PREFIX/lib/libplumed${{ prog_suffix }}Kernel$SHLIB_EXT
+      - plumed${{ program_suffix }} info --root
+      - plumed${{ program_suffix }} info --long-version
+      - plumed${{ program_suffix }}-patch -h
+      - plumed${{ program_suffix }} config has external_blas external_lapack fftw gsl zlib libmetatomic
+      - $PREFIX/lib/plumed${{ program_suffix }}/plumed-runtime -h
+      - test -f $PREFIX/lib/libplumed${{ program_suffix }}$SHLIB_EXT
+      - test -f $PREFIX/lib/libplumed${{ program_suffix }}Wrapper.a
+      - test -f $PREFIX/lib/libplumed${{ program_suffix }}Kernel$SHLIB_EXT
       - conda inspect linkages -p $PREFIX $PKG_NAME
       - if: osx
         then:
