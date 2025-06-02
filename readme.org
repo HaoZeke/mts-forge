@@ -6,8 +6,7 @@ Installation of the packages in this forge is via:
 micromamba install -c "https://prefix.dev/mts-forge" plumed
 #+end_src
 *** Builds
-Each package is built with ~rattler-build~ using a ~nushell~ script for cross
-platform compatibility. For convinience, these can be handled via ~pixi~ tasks.
+Each package is built with ~rattler-build~. For convinience, these can be handled via ~pixi~ tasks.
 #+begin_src bash
 # Classic build
 pixi run build $RECIPE

@@ -1,17 +1,16 @@
 context:
-  version: "2.10"
-  build_pre: 1
+  version: "2.10.dev"
+  build_pre: 2
   build_num: >
     ${{ (build_pre | int + 2000) if mpi == "openmpi"
     else ((build_pre | int + 1000) if mpi == "mpich"
     else ((build_pre | int) if mpi == "nompi"
     else 0)) }}
   git_rev: 9a880decf4f2c312e9083978619eb00299ea2ac3
-  program_suffix: "-metatomic"
   mpi_prefix: "${{ 'mpi_' + mpi }}"
 
 package:
-  name: plumed${{ program_suffix }}
+  name: plumed-metatomic
   version: ${{ version }}
 
 source:
@@ -33,7 +32,6 @@ build:
     env:
       USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
       USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
-      PSUFFIX:
 
 requirements:
   build:
