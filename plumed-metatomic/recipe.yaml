@@ -33,7 +33,7 @@ build:
     env:
       USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
       USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
-      PSUFFIX: ${{ program_suffix }}
+      PSUFFIX:
 
 requirements:
   build:
@@ -71,14 +71,14 @@ requirements:
 
 tests:
   - script:
-      - plumed${{ program_suffix }} info --root
-      - plumed${{ program_suffix }} info --long-version
-      - plumed${{ program_suffix }}-patch -h
-      - plumed${{ program_suffix }} config has external_blas external_lapack fftw gsl zlib libmetatomic
-      - $PREFIX/lib/plumed${{ program_suffix }}/plumed-runtime -h
-      - test -f $PREFIX/lib/libplumed${{ program_suffix }}$SHLIB_EXT
-      - test -f $PREFIX/lib/libplumed${{ program_suffix }}Wrapper.a
-      - test -f $PREFIX/lib/libplumed${{ program_suffix }}Kernel$SHLIB_EXT
+      - plumed info --root
+      - plumed info --long-version
+      - plumed-patch -h
+      - plumed config has external_blas external_lapack fftw gsl zlib libmetatomic
+      - $PREFIX/lib/plumed/plumed-runtime -h
+      - test -f $PREFIX/lib/libplumed$SHLIB_EXT
+      - test -f $PREFIX/lib/libplumedWrapper.a
+      - test -f $PREFIX/lib/libplumedKernel$SHLIB_EXT
       - conda inspect linkages -p $PREFIX $PKG_NAME
       - if: osx
         then:
