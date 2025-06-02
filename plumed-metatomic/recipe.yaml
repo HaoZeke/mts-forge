@@ -1,6 +1,6 @@
 context:
   version: "2.10"
-  build_pre: 0
+  build_pre: 1
   build_num: >
     ${{ (build_pre | int + 2000) if mpi == "openmpi"
     else ((build_pre | int + 1000) if mpi == "mpich"
