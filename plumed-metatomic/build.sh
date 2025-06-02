@@ -1,5 +1,26 @@
 #!/usr/bin/env bash
 
+set -ex
+
+# enable MPI
+if [[ "$USE_MPI" == 1 ]]; then
+  export CXX="$PREFIX/bin/mpicxx"
+  export CC="$PREFIX/bin/mpicc"
+  export MPI_FLAG="--enable-mpi"
+else
+  export MPI_FLAG="--disable-mpi"
+fi
+
+# Setup sccache
+# Remember to build with rattler-build build --no-build-id --recipe ..
+if [[ "$USE_SCCACHE" == 1 ]]; then
+export CC="sccache $CC"
+export CXX="sccache $CXX"
+else
+export CC="$CC"
+export CXX="$CXX"
+fi
+
 if [[ $(uname) == "Linux" ]]; then
 # STATIC_LIBS is a PLUMED specific option and is required on Linux for the following reason:
 # When using env modules the dependent libraries can be found through the
@@ -18,20 +39,12 @@ export CXXFLAGS="${CXXFLAGS//-O2/-O3}"
 
 # libraries are explicitly listed here due to --disable-libsearch
 export LIBS="-lboost_serialization -lfftw3 -lgsl -lgslcblas -llapack -lblas -lz $LIBS"
-export LIBS="-lmetatensor_torch -lmetatensor -ltorch -lc10 -ltorch_cpu $LIBS"
+export LIBS="-lmetatomic_torch -lmetatensor_torch -lmetatensor -ltorch -lc10 -ltorch_cpu $LIBS"
 
 # libtorch puts some headers in a non-standard place
 export CPPFLAGS="-I$PREFIX/include/torch/csrc/api/include $CPPFLAGS"
-
-# enable MPI
-export CXX=mpic++
-
-# Setup sccache
-# Remember to build with rattler-build build --no-build-id --recipe ..
-if [[ $_CCACHE ]]; then
-export C="sccache $C"
-export CXX="sccache $CXX"
-fi
+# macos backfill
+export CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
 
 # python is disabled since it should be provided as a separate package
 # --disable-libsearch forces to link only explicitely requested libraries
@@ -39,13 +52,14 @@ fi
 # --disable-static-archive makes package smaller
 ./configure --prefix="$PREFIX" \
             --disable-python \
+            "$MPI_FLAG" \
             --disable-libsearch \
             --disable-static-patch \
             --disable-static-archive \
             --enable-modules=all \
             --enable-boost_serialization \
-            --enable-metatensor \
+            --enable-libmetatomic \
             --enable-libtorch
 
-make "-j${CPU_COUNT}" "${VERBOSE_AT}"
+make "-j${CPU_COUNT}"
 make install

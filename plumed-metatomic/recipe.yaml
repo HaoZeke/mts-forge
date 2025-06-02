@@ -1,0 +1,104 @@
+context:
+  version: "2.10.dev"
+  build_pre: 2
+  build_num: >
+    ${{ (build_pre | int + 2000) if mpi == "openmpi"
+    else ((build_pre | int + 1000) if mpi == "mpich"
+    else ((build_pre | int) if mpi == "nompi"
+    else 0)) }}
+  git_rev: 9a880decf4f2c312e9083978619eb00299ea2ac3
+  mpi_prefix: "${{ 'mpi_' + mpi }}"
+
+package:
+  name: plumed-metatomic
+  version: ${{ version }}
+
+source:
+  git: https://github.com/plumed/plumed2.git
+  rev: ${{ git_rev }}
+
+build:
+  # add build string so packages can depend on
+  # mpi or nompi variants
+  # dependencies:
+  # `pkg * mpi_mpich_*` for mpich
+  # `pkg * mpi_*` for any mpi
+  number: ${{ build_num }}
+  string: ${{ mpi_prefix }}_h${{ hash }}_${{ build_num }}_gc_${{ git_rev[:7] }}
+  skip:
+    - win
+  script:
+    file: build.sh
+    env:
+      USE_MPI: ${{ 0 if mpi == 'nompi' else 1 }}
+      USE_SCCACHE: ${{ env.get("USE_SCCACHE", default=0) }}
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ compiler('cxx') }}
+    - ${{ stdlib('c') }}
+    - make
+    - sccache
+    - if: (build_platform != target_platform) and (mpi == "openmpi")
+      then: ${{ mpi }}
+    - if: osx
+      then: llvm-openmp
+  host:
+    - if: mpi != "nompi"
+      then:
+        - ${{ mpi }}
+    - boost-cpp
+    - fftw
+    - gsl
+    - openblas
+    - zlib
+    - libtorch
+    - libmetatomic-torch >=0.1.1,<0.2
+    - if: osx
+      then: llvm-openmp
+  run:
+    - if: mpi != "nompi"
+      then: ${{ mpi }}
+    - boost-cpp
+    - libtorch
+    - openblas
+    - libmetatomic-torch >=0.1.1,<0.2
+    - if: osx
+      then: llvm-openmp
+
+tests:
+  - script:
+      - plumed info --root
+      - plumed info --long-version
+      - plumed-patch -h
+      - plumed config has external_blas external_lapack fftw gsl zlib libmetatomic
+      - $PREFIX/lib/plumed/plumed-runtime -h
+      - test -f $PREFIX/lib/libplumed$SHLIB_EXT
+      - test -f $PREFIX/lib/libplumedWrapper.a
+      - test -f $PREFIX/lib/libplumedKernel$SHLIB_EXT
+      - conda inspect linkages -p $PREFIX $PKG_NAME
+      - if: osx
+        then:
+          - conda inspect objects -p $PREFIX $PKG_NAME
+    requirements:
+      run:
+        - conda-build
+
+about:
+  homepage: http://www.plumed.org/
+  license: LGPL-3.0
+  license_family: GPL
+  license_file: COPYING.LESSER
+  summary: "Free energy calculations in molecular systems"
+  description: |
+    PLUMED is an open source library for free energy calculations in molecular
+    systems which works together with some of the most popular molecular
+    dynamics engines. This version is instrumented for working with Metatensor.
+  documentation: https://docs.metatensor.org/latest/atomistic/engines/plumed.html
+  repository: https://github.com/plumed/plumed2
+
+extra:
+  recipe-maintainers:
+    - HaoZeke
+    - luthaf
