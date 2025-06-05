@@ -35,11 +35,11 @@ jobs:
         --target-platform=$TARGET_PLATFORM \
         --skip-existing=all
       shell: bash
-    - if: github.event_name == 'push'
-      name: Upload all packages
-      env:
+    - env:
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
         STAGING_BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
+      if: github.event_name == 'push'
+      name: Upload all packages
       run: |-
         shopt -s nullglob
         EXIT_CODE=0
@@ -61,7 +61,7 @@ jobs:
           target: osx-64
         - os: macos-14
           target: osx-arm64
-        - os: ubuntu-24.04-arm
+        - os: ubuntu-22.04-arm
           target: linux-aarch64
 name: Build all packages
 on:

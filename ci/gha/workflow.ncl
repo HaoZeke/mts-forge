@@ -41,6 +41,7 @@ let workflow = {
             # force older macos-13 to get x86_64 runners
             { target = "osx-64", os = "macos-13" },
             { target = "osx-arm64", os = "macos-14" },
+            { target = "linux-aarch64", os = "ubuntu-22.04-arm" },
           ],
         },
         fail-fast = false,
@@ -72,11 +73,15 @@ ${{ runner.os }}-${{ matrix.target }}-rattler-pkgs-refs/heads/main-
           name = "Upload all packages",
           shell = "bash",
           "if" = "github.event_name == 'push'",
+          env = {
+            BINSTAR_TOKEN = m%"${{ secrets.BINSTAR_TOKEN }}"%,
+            STAGING_BINSTAR_TOKEN = m%"${{ secrets.BINSTAR_TOKEN }}"%,
+          },
           run = m%"
 shopt -s nullglob
 EXIT_CODE=0
 for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
-  if ! rattler-build upload prefix -c mts-forge "${pkg}"; then
+  if ! rattler-build upload anaconda -o metatensor -c main -a $BINSTAR_TOKEN "${pkg}"; then
     EXIT_CODE=0 # This is a cop out, fix the exit code later
     # The issue is that there can be duplicates, which are annoying
   fi
