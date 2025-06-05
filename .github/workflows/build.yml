@@ -61,6 +61,8 @@ jobs:
           target: osx-64
         - os: macos-14
           target: osx-arm64
+        - os: ubuntu-24.04-arm
+          target: linux-aarch64
 name: Build all packages
 on:
   pull_request:
