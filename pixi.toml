@@ -13,6 +13,7 @@ build = "rattler-build build --experimental --recipe "
 # https://rattler.build/latest/tips_and_tricks/#using-sccache-or-ccache-with-rattler-build
 build-sccache = "USE_SCCACHE=1 rattler-build build --experimental --no-build-id --recipe "
 build-all-sccache = "USE_SCCACHE=1 rattler-build build --experimental --no-build-id --skip-existing=all --recipe-dir ."
+gen-gha = "nickel export --format yaml ci/gha/workflow.ncl -o .github/workflows/build.yml"
 
 [dependencies]
 rattler-build = ">=0.42.1,<0.43"

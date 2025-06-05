@@ -17,6 +17,8 @@ pixi run build-sccache $RECIPE
 These are defined via the ~nickel~ configuration language and are exported as:
 #+begin_src bash
 nickel export --format yaml ci/gha/workflow.ncl -o .github/workflows/build.yml
+# or
+pixi r gen-gha
 #+end_src
 ** TODO Setup ~conda_index~
 * License
