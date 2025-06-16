@@ -1,0 +1,66 @@
+context:
+  version: "2.10.dev"
+  build_num: 0
+  git_rev: 9a880decf4f2c312e9083978619eb00299ea2ac3
+
+package:
+  name: py-plumed-metatomic
+  version: ${{ version }}
+
+source:
+  git: https://github.com/plumed/plumed2.git
+  rev: ${{ git_rev }}
+
+build:
+  number: ${{ build_num }}
+  string: h${{ hash }}_${{ build_num }}_gc_${{ git_rev[:7] }}
+  skip:
+    - win
+  script:
+    file: build.sh
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ stdlib('c') }}
+    - make
+    - if: (build_platform != target_platform)
+      then:
+        - python
+        - cross-python_${{target_platform}}
+        - cython
+    - if: osx
+      then: llvm-openmp
+  host:
+    - python
+    - setuptools
+    - pip
+    - cython
+  run:
+    - plumed-metatomic
+    - python
+
+tests:
+  - python:
+      imports:
+        - plumed
+  - script:
+      - python -c "import plumed; p=plumed.Plumed(); print(p)"
+
+about:
+  homepage: http://www.plumed.org/
+  license: LGPL-3.0
+  license_family: GPL
+  license_file: COPYING.LESSER
+  summary: "Python wrappers for plumed"
+  description: |
+    PLUMED is an open source library for free energy calculations in molecular
+    systems which works together with some of the most popular molecular
+    dynamics engines. This version is instrumented for working with Metatensor.
+  documentation: https://docs.metatensor.org/latest/atomistic/engines/plumed.html
+  repository: https://github.com/plumed/plumed2
+
+extra:
+  recipe-maintainers:
+    - HaoZeke
+    - luthaf
