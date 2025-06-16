@@ -36,6 +36,15 @@ jobs:
         --skip-existing=all
       shell: bash
     - env:
+        MACOSX_DEPLOYMENT_TARGET: '11.0'
+        TARGET_PLATFORM: ${{ matrix.target }}
+      name: Build py-plumed-metatomic
+      run: |-
+        pixi r build-sccache py-plumed-metatomic \
+        --target-platform=$TARGET_PLATFORM \
+        --skip-existing=all
+      shell: bash
+    - env:
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
         STAGING_BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
       if: github.event_name == 'push'
