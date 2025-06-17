@@ -1,6 +1,6 @@
 context:
   version: "2.10.dev"
-  build_pre: 2
+  build_pre: 3
   build_num: >
     ${{ (build_pre | int + 2000) if mpi == "openmpi"
     else ((build_pre | int + 1000) if mpi == "mpich"
@@ -24,7 +24,7 @@ build:
   # `pkg * mpi_mpich_*` for mpich
   # `pkg * mpi_*` for any mpi
   number: ${{ build_num }}
-  string: ${{ mpi_prefix }}_h${{ hash }}_${{ build_num }}_gc_${{ git_rev[:7] }}
+  string: ${{ mpi_prefix }}_h${{ hash }}_git.${{ git_rev[:7] }}_${{ build_num }}
   skip:
     - win
   script:

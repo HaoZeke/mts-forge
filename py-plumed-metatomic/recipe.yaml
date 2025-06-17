@@ -1,6 +1,6 @@
 context:
   version: "2.10.dev"
-  build_num: 0
+  build_num: 1
   git_rev: 9a880decf4f2c312e9083978619eb00299ea2ac3
 
 package:
@@ -13,7 +13,7 @@ source:
 
 build:
   number: ${{ build_num }}
-  string: h${{ hash }}_${{ build_num }}_gc_${{ git_rev[:7] }}
+  string: h${{ hash }}_git.${{ git_rev[:7] }}_${{ build_num }}
   skip:
     - win
   script:
