@@ -53,7 +53,9 @@ requirements:
     - gsl
     - openblas
     - zlib
-    - libtorch
+    # always build against the CPU version of libtorch, we can still pick the
+    # cuda one at runtime [1]
+    - libtorch * cpu*
     - libmetatomic-torch >=0.1.1,<0.2
     - if: osx
       then: llvm-openmp
@@ -102,3 +104,6 @@ extra:
   recipe-maintainers:
     - HaoZeke
     - luthaf
+
+# References
+# [1]: https://github.com/metatensor/lammps-metatomic-feedstock/blob/main/recipe/meta.yaml
