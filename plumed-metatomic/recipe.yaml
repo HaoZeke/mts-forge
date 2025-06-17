@@ -49,7 +49,7 @@ requirements:
       then:
         - ${{ mpi }}
     - boost-cpp
-    - fftw
+    - fftw *{{ mpi_prefix }}_*
     - gsl
     - openblas
     - zlib
