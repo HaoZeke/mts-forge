@@ -7,7 +7,7 @@ context:
     else ((build_pre | int) if mpi == "nompi"
     else 0)) }}
   git_rev: 9a880decf4f2c312e9083978619eb00299ea2ac3
-  mpi_prefix: "${{ 'mpi_' + mpi }}"
+  mpi_prefix: ${{ 'mpi_' + mpi if mpi != 'nompi' else 'nompi' }}
 
 package:
   name: plumed-metatomic
