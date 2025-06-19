@@ -19,3 +19,5 @@ MACOSX_SDK_VERSION:
 channel_sources: metatensor,conda-forge
 channel_targets:
   - metatensor main
+pytorch:
+  - '2.7'
