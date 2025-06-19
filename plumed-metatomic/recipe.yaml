@@ -52,6 +52,7 @@ requirements:
     - fftw *${{ mpi_prefix }}_*
     - gsl
     - liblapack
+    - libblas
     - zlib
     # always build against the CPU version of libtorch, we can still pick the
     # cuda one at runtime [1]
