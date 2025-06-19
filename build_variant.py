@@ -106,11 +106,13 @@ def main(package_name: Path, mpi_variant: MPIVariant):
             "-m", BASE_CONFIG_FILENAME,
             "-m", temp_variant_filename,
             "--no-build-id",
+            "--target-platform=$TARGET_PLATFORM",
+            "--skip-existing=all",
             "--recipe", str(package_name),
         ]
 
         env = os.environ.copy()
-        env["USE_SCCACHE"] = "1"
+        env["USE_SCCACHE"] = 1
 
         log.info(f"Executing command: [yellow]{' '.join(build_command)}[/]")
         subprocess.run(build_command, env=env, check=True)
