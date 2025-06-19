@@ -7,13 +7,18 @@ version = "0.1.0"
 description = "Forge for metatensor enabled software and tooling"
 
 [tasks]
+gen-gha = "nickel export --format yaml ci/gha/workflow.ncl -o .github/workflows/build.yml"
+
 #  --experimental for nompi in context
-build = "rattler-build build --experimental --recipe "
+[tasks.build-sccache]
 # Cached build
 # https://rattler.build/latest/tips_and_tricks/#using-sccache-or-ccache-with-rattler-build
-build-sccache = "USE_SCCACHE=1 rattler-build build --experimental --no-build-id --recipe "
-build-all-sccache = "USE_SCCACHE=1 rattler-build build --experimental --no-build-id --skip-existing=all --recipe-dir ."
-gen-gha = "nickel export --format yaml ci/gha/workflow.ncl -o .github/workflows/build.yml"
+args = ["pkg"]
+cmd = "USE_SCCACHE=1 rattler-build build --experimental -m conda_build_config.yaml -m {{ pkg }}/variants.yaml --no-build-id --recipe {{ pkg }}"
+
+[tasks.build]
+args = ["pkg"]
+cmd = "rattler-build build --experimental -m conda_build_config.yaml -m {{ pkg }}/variants.yaml --no-build-id --recipe {{ pkg }}"
 
 [dependencies]
 rattler-build = ">=0.42.1,<0.43"
