@@ -16,6 +16,10 @@ gen-gha = "nickel export --format yaml ci/gha/workflow.ncl -o .github/workflows/
 args = ["pkg"]
 cmd = "USE_SCCACHE=1 rattler-build build --experimental -m conda_build_config.yaml -m {{ pkg }}/variants.yaml --no-build-id --recipe {{ pkg }}"
 
+[tasks.build-ci]
+args = ["pkg", "target"]
+cmd = "USE_SCCACHE=1 rattler-build build --experimental -m conda_build_config.yaml -m {{ pkg }}/variants.yaml --no-build-id --recipe {{ pkg }} --target-platform={{ target }} --skip-existing=all"
+
 [tasks.build]
 args = ["pkg"]
 cmd = "rattler-build build --experimental -m conda_build_config.yaml -m {{ pkg }}/variants.yaml --no-build-id --recipe {{ pkg }}"

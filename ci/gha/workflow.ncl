@@ -9,11 +9,7 @@ let makeBuildStep = fun packageName =>
       TARGET_PLATFORM = m%"${{ matrix.target }}"%,
       MACOSX_DEPLOYMENT_TARGET = "11.0",
     },
-    run = m%"
-pixi r build-sccache %{packageName} \
---target-platform=$TARGET_PLATFORM \
---skip-existing=all
-"%,
+    run = m%"pixi r build-ci %{packageName} $TARGET_PLATFORM"%,
   }
 in
 let workflow = {
