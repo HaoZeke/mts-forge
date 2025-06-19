@@ -30,19 +30,13 @@ jobs:
         MACOSX_DEPLOYMENT_TARGET: '11.0'
         TARGET_PLATFORM: ${{ matrix.target }}
       name: Build plumed-metatomic
-      run: |-
-        pixi r build-sccache plumed-metatomic \
-        --target-platform=$TARGET_PLATFORM \
-        --skip-existing=all
+      run: pixi r build-ci plumed-metatomic $TARGET_PLATFORM
       shell: bash
     - env:
         MACOSX_DEPLOYMENT_TARGET: '11.0'
         TARGET_PLATFORM: ${{ matrix.target }}
       name: Build py-plumed-metatomic
-      run: |-
-        pixi r build-sccache py-plumed-metatomic \
-        --target-platform=$TARGET_PLATFORM \
-        --skip-existing=all
+      run: pixi r build-ci py-plumed-metatomic $TARGET_PLATFORM
       shell: bash
     - env:
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}

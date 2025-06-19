@@ -51,13 +51,13 @@ requirements:
     - boost-cpp
     - fftw *${{ mpi_prefix }}_*
     - gsl
-    - liblapack *
-    - libblas *
+    - liblapack
+    - libblas
     - zlib
     # always build against the CPU version of libtorch, we can still pick the
     # cuda one at runtime [1]
     - libtorch * cpu*
-    - libmetatomic-torch >=0.1.1,<0.2
+    - libmetatomic-torch >=0.1.2,<0.2
     - if: osx
       then: llvm-openmp
   run:
@@ -65,9 +65,7 @@ requirements:
       then: ${{ mpi }}
     - boost-cpp
     - libtorch
-    - liblapack *
-    - libblas *
-    - libmetatomic-torch >=0.1.1,<0.2
+    - libmetatomic-torch >=0.1.2,<0.2
     - if: osx
       then: llvm-openmp
 
@@ -88,8 +86,6 @@ tests:
     requirements:
       run:
         - conda-build
-        - liblapack *
-        - libblas *
 
 about:
   homepage: http://www.plumed.org/
